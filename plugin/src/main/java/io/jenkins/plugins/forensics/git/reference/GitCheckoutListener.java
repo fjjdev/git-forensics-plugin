@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jgit.api.Git;
@@ -95,8 +96,9 @@ public class GitCheckoutListener extends SCMListener {
 
     private GitCommitsRecord recordNewCommits(final Run<?, ?> build, final GitClient gitClient,
             final String scmKey, final FilteredLog logger, final String latestCommit) {
-        List<String> commits = recordCommitsSincePreviousBuild(latestCommit, gitClient, scmKey, logger);
-        
+        List<RevCommit> revCommits = recordCommitsSincePreviousBuild(latestCommit, gitClient, scmKey, logger);
+        List<String> commits = revCommits.stream().map(RevCommit::getName).collect(Collectors.toList());
+
         final String parentCommit = findParentCommit(gitClient);
         
         if (commits.isEmpty()) {
@@ -111,7 +113,7 @@ public class GitCheckoutListener extends SCMListener {
                 logger.logInfo("-> Recorded %d new commits", commits.size());
             }
             return new GitCommitsRecord(build, scmKey, logger, commits.get(0), parentCommit, 
-                    commits, getRecordingType(latestCommit));
+                    commits, revCommits, getRecordingType(latestCommit));
         }
     }
 
@@ -122,7 +124,7 @@ public class GitCheckoutListener extends SCMListener {
         return RecordingType.INCREMENTAL;
     }
 
-    private List<String> recordCommitsSincePreviousBuild(final String latestCommitName, final GitClient gitClient,
+    private List<RevCommit> recordCommitsSincePreviousBuild(final String latestCommitName, final GitClient gitClient,
             final String scmKey, final FilteredLog logger) {
         try {
             return gitClient.withRepository(new GitCommitsCollector(latestCommitName));
@@ -163,7 +165,7 @@ public class GitCheckoutListener extends SCMListener {
     /**
      * Collects and records all commits since the last build.
      */
-    private static class GitCommitsCollector implements RepositoryCallback<List<String>> {
+    private static class GitCommitsCollector implements RepositoryCallback<List<RevCommit>> {
         private static final long serialVersionUID = -5980402198857923793L;
 
         private static final int MAX_COMMITS = 200; // TODO: should the number of recorded commits be configurable?
@@ -175,15 +177,15 @@ public class GitCheckoutListener extends SCMListener {
         }
 
         @Override
-        public List<String> invoke(final Repository repository, final VirtualChannel channel) throws IOException {
-            List<String> newCommits = new ArrayList<>();
+        public List<RevCommit> invoke(final Repository repository, final VirtualChannel channel) throws IOException {
+            List<RevCommit> newCommits = new ArrayList<>();
             try (Git git = new Git(repository)) {
                 for (RevCommit commit : git.log().add(getHead(repository)).call()) {
                     String commitId = commit.getName();
                     if (commitId.equals(latestRecordedCommit) || newCommits.size() >= MAX_COMMITS) {
                         return newCommits;
                     }
-                    newCommits.add(commitId);
+                    newCommits.add(commit);
                 }
             }
             catch (GitAPIException e) {

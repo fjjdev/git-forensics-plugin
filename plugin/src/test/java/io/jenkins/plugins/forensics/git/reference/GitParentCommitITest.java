@@ -18,13 +18,11 @@ import static io.jenkins.plugins.forensics.git.assertions.Assertions.*;
 
 public class GitParentCommitITest extends GitITest {
 
-    private static final String JOB_NAME = "parentCommitFinder";
-
     @Test
-    public void testSingleBranch() throws Exception {
+    public void testSingleBranch() throws IOException {
         // Init commit
         String currentCommit = getHead();
-        FreeStyleProject job = createFreeStyleProject(JOB_NAME);
+        FreeStyleProject job = createFreeStyleProject("SingleBranch");
 
         Run<?, ?> build = buildSuccessfully(job);
         GitCommitsRecord record = build.getAction(GitCommitsRecord.class);
@@ -60,7 +58,7 @@ public class GitParentCommitITest extends GitITest {
     public void testMultiBranch() throws IOException {
         // Init commit
         String currentCommit = getHead();
-        FreeStyleProject job = createFreeStyleProject(JOB_NAME);
+        FreeStyleProject job = createFreeStyleProject("MultiBranch");
 
         // root build, should have no reference build
         Run<?, ?> masterBuild = buildSuccessfully(job);
@@ -110,11 +108,53 @@ public class GitParentCommitITest extends GitITest {
                 .hasReferenceBuildId(sideBuild.getExternalizableId());
     }
 
-    private FreeStyleProject createFreeStyleProject(final String name) throws IOException {
-        FreeStyleProject project = createProject(FreeStyleProject.class, name);
+    @Test
+    public void testMultiBranch2() throws IOException {
+        /*  - commit #1 master
+            - checkout new branch side
+            - checkout master
+            - commit #2 master
+            - build master (#1, contains commits #1 and #2)
+            - checkout side
+            - commit #1 side
+            - build side (#2)
+            --> Then the parent build is not the latest commit of #1 */
+
+        // Init commit
+        String currentCommit = getHead();
+        FreeStyleProject job = createFreeStyleProject("MultiBranchTwo");
+
+        checkoutNewBranch("side");
+        checkout("master");
+        writeFileAsAuthorBar("Second commit to master");
+        Run<?, ?> firstMasterBuild = buildSuccessfully(job);
+        GitCommitsRecord firstMasterRecord = firstMasterBuild.getAction(GitCommitsRecord.class);
+        ReferenceBuild firstMasterRefBuild = firstMasterBuild.getAction(ReferenceBuild.class);
+        // master has 2 commits, but only one build -> parent commit, but no reference build
+        assertThat(firstMasterRecord).isNotNull()
+                .hasParentCommit(currentCommit);
+        assertThat(firstMasterRefBuild).isNotNull()
+                .hasOwner(firstMasterBuild)
+                .doesNotHaveReferenceBuild();
+
+        checkout("side");
+        writeFileAsAuthorBar("Second commit to side");
+        Run<?, ?> firstSideBuild = buildSuccessfully(job);
+        GitCommitsRecord firstSideRecord = firstSideBuild.getAction(GitCommitsRecord.class);
+        ReferenceBuild firstSideRefBuild = firstSideBuild.getAction(ReferenceBuild.class);
+        assertThat(firstSideRecord).isNotNull()
+                .hasParentCommit(currentCommit);
+        assertThat(firstSideRefBuild).isNotNull()
+                .hasOwner(firstSideBuild)
+                .hasReferenceBuildId(firstMasterBuild.getExternalizableId());
+        // First build contains the parent commit, so the first build has to be selected as reference build
+    }
+
+    private FreeStyleProject createFreeStyleProject(final String jobName) throws IOException {
+        FreeStyleProject project = createProject(FreeStyleProject.class, jobName);
 
         GitReferenceRecorder recorder = new GitReferenceRecorder();
-        recorder.setReferenceJob(JOB_NAME);
+        recorder.setReferenceJob(jobName);
 
         project.getPublishersList().add(recorder);
         project.setScm(new GitSCM(sampleRepo.toString()));

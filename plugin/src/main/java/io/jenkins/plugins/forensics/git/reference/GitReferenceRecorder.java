@@ -1,13 +1,15 @@
 package io.jenkins.plugins.forensics.git.reference;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import edu.hm.hafner.util.VisibleForTesting;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+import org.eclipse.jgit.revwalk.RevCommit;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
-import org.jboss.marshalling._private.GetReflectionFactoryAction;
 import org.jenkinsci.Symbol;
 import hudson.Extension;
 import hudson.model.Run;
@@ -100,15 +102,40 @@ public class GitReferenceRecorder extends ReferenceRecorder {
      *          
      * @return reference build, if exists
      */
-    private Optional<Run<?, ?>> findParentReferenceBuildFromCommit(final Run<?, ?> owner, 
-            final String parentCommit) {
+    private Optional<Run<?, ?>> findParentReferenceBuild(Run<?, ?> owner, String parentCommit) {
         for(Run<?, ?> run = owner.getPreviousBuild(); run != null; run = run.getPreviousBuild()) {
             GitCommitsRecord record = run.getAction(GitCommitsRecord.class);
-            if(record != null && parentCommit.equals(record.getLatestCommit())) {
+            if(record != null &&
+                    (parentCommit.equals(record.getLatestCommit()) || record.getCommits().contains(parentCommit))) {
                 return Optional.of(run);
             }
         }
         return Optional.empty();
+    }
+
+    /**
+     * Tries to find a reference build, which built the parent commit of the current build
+     * @param thisCommit
+     *          GitCommitsRecord for the current build
+     *
+     * @return reference build, if exists
+     */
+    private Optional<Run<?, ?>> findParentReferenceBuildFromCommit(final GitCommitsRecord thisCommit) {
+        List<RevCommit> commits = thisCommit.getRevCommits();
+
+        if(commits.isEmpty()) {
+            return findParentReferenceBuild(thisCommit.getOwner(), thisCommit.getParentCommit());
+        } else {
+            return commits.stream().map(commit -> {
+                return Arrays.stream(commit.getParents())
+                        .map(parent -> findParentReferenceBuild(thisCommit.getOwner(), parent.getName()))
+                        .filter(Optional::isPresent)
+                        .findFirst()
+                        .orElseGet(Optional::empty);
+            }).filter(Optional::isPresent)
+                    .findFirst()
+                    .orElseGet(Optional::empty);
+        }
     }
 
     @Override
@@ -117,12 +144,9 @@ public class GitReferenceRecorder extends ReferenceRecorder {
         
         if(referenceBuildFinderStrategy == ReferenceBuildFinderStrategy.BEST_MATCH_BUILD) {
             GitCommitsRecord referenceCommit = lastCompletedBuildOfReferenceJob.getAction(GitCommitsRecord.class);
-
             return thisCommit.getReferencePoint(referenceCommit, getMaxCommits(), isSkipUnknownCommits());
         } else {
-            String parentCommit = thisCommit.getParentCommit();
-            
-            return findParentReferenceBuildFromCommit(owner, parentCommit);
+            return findParentReferenceBuildFromCommit(thisCommit);
         }
    }
 
