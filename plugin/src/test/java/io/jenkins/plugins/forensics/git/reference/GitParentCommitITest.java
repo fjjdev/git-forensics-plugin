@@ -3,6 +3,8 @@ package io.jenkins.plugins.forensics.git.reference;
 import hudson.model.FreeStyleProject;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 
 import hudson.plugins.git.GitSCM;
 import org.apache.commons.lang.StringUtils;
@@ -20,134 +22,105 @@ public class GitParentCommitITest extends GitITest {
 
     @Test
     public void testSingleBranch() throws IOException {
-        // Init commit
-        String currentCommit = getHead();
+        // Commit A
+        String commitA = getHead();
         FreeStyleProject job = createFreeStyleProject("SingleBranch");
 
-        Run<?, ?> build = buildSuccessfully(job);
-        GitCommitsRecord record = build.getAction(GitCommitsRecord.class);
-        ReferenceBuild refBuild = build.getAction(ReferenceBuild.class);
-        // Init Commit has no parent commit, no reference build
-        assertThat(record).isNotNull()
-                .hasParentCommit(StringUtils.EMPTY);
-        assertThat(refBuild).isNotNull()
-                .hasOwner(build)
+        // Build 1: [A]
+        Run<?, ?> build1 = buildSuccessfully(job);
+        // Commit A has no parent commit and therefore build1 has no reference build
+        assertThat(build1.getAction(GitCommitsRecord.class)).isNotNull()
+                .hasParentCommits(Collections.emptyList());
+        assertThat(build1.getAction(ReferenceBuild.class)).isNotNull()
+                .hasOwner(build1)
                 .doesNotHaveReferenceBuild();
 
-        writeFileAsAuthorBar("Second Commit in File");
+        // Commit B
+        writeFileAsAuthorBar("Commit B in master");
 
-        Run<?, ?> nextBuild = buildSuccessfully(job);
-        GitCommitsRecord nextRecord = nextBuild.getAction(GitCommitsRecord.class);
-        ReferenceBuild nextRefBuild = nextBuild.getAction(ReferenceBuild.class);
-        assertThat(nextRecord).isNotNull()
-                .hasParentCommit(currentCommit);
-        assertThat(nextRefBuild).isNotNull()
-                .hasReferenceBuildId(build.getExternalizableId());
+        // Build 2: [B]
+        Run<?, ?> build2 = buildSuccessfully(job);
+        assertThat(build2.getAction(GitCommitsRecord.class)).isNotNull();
+        assertThat( build2.getAction(ReferenceBuild.class)).isNotNull()
+                .hasReferenceBuildId(build1.getExternalizableId());
 
-        // should have the same parent commit as the previous build, as no commits have been made
-        Run<?, ?> lastBuild = buildSuccessfully(job);
-        GitCommitsRecord lastRecord = lastBuild.getAction(GitCommitsRecord.class);
-        ReferenceBuild lastRefBuild = lastBuild.getAction(ReferenceBuild.class);
-        assertThat(lastRecord).isNotNull()
-                .hasParentCommit(currentCommit);
-        assertThat(lastRefBuild).isNotNull()
-                .hasReferenceBuildId(build.getExternalizableId());
+        // Build 3: [B]
+        // build3 should have the same parent commit as the previous build, as no new commits have been made
+        Run<?, ?> build3 = buildSuccessfully(job);
+        assertThat(build3.getAction(GitCommitsRecord.class)).isNotNull();
+        assertThat(build3.getAction(ReferenceBuild.class)).isNotNull()
+                .hasReferenceBuildId(build1.getExternalizableId());
     }
 
     @Test
     public void testMultiBranch() throws IOException {
-        // Init commit
-        String currentCommit = getHead();
+        // Commit A
+        String commitA = getHead();
         FreeStyleProject job = createFreeStyleProject("MultiBranch");
 
-        // root build, should have no reference build
-        Run<?, ?> masterBuild = buildSuccessfully(job);
+        // build1 has no reference build
+        Run<?, ?> build1 = buildSuccessfully(job);
 
+        checkoutNewBranch("feature");
+        // Commit B
+        writeFileAsAuthorBar("Commit B in feature branch");
 
-        checkoutNewBranch("side");
-        writeFileAsAuthorBar("Added new file to the side branch");
-
-        // parent commit should point to root build
-        Run<?, ?> sideBuild = buildSuccessfully(job);
-        GitCommitsRecord sideRecord = sideBuild.getAction(GitCommitsRecord.class);
-        ReferenceBuild sideRefBuild = sideBuild.getAction(ReferenceBuild.class);
-        assertThat(sideRecord).isNotNull()
-                .hasParentCommit(currentCommit);
-        assertThat(sideRefBuild).isNotNull()
-                .hasOwner(sideBuild)
-                .hasReferenceBuildId(masterBuild.getExternalizableId());
-
+        // reference build should point to build1
+        Run<?, ?> build2 = buildSuccessfully(job);
+        assertThat(build2.getAction(GitCommitsRecord.class)).isNotNull();
+        assertThat( build2.getAction(ReferenceBuild.class)).isNotNull()
+                .hasOwner(build2)
+                .hasReferenceBuildId(build1.getExternalizableId());
 
         checkout("master");
-        writeFileAsAuthorBar("Edited file on master branch 1");
+        // Commit C
+        writeFileAsAuthorBar("Commit C in master branch");
 
-        // parent commit should still point to root build, as the master branch now has an available build
-        Run<?, ?> masterBuild2 = buildSuccessfully(job);
-        GitCommitsRecord masterRecord2 = masterBuild2.getAction(GitCommitsRecord.class);
-        ReferenceBuild masterRefBuild2 = masterBuild2.getAction(ReferenceBuild.class);
-        assertThat(masterRecord2).isNotNull()
-                .hasParentCommit(currentCommit);
-        assertThat(masterRefBuild2).isNotNull()
-                .hasOwner(masterBuild2)
-                .hasReferenceBuildId(masterBuild.getExternalizableId());
-
-
-        // new branch feat has now the latest commit from the side branch as parent
-        checkout("side");
-        checkoutNewBranch("feat");
-        writeFileAsAuthorBar("side2 branch created and new file added");
-
-        // The reference build should now point to the second build, as the parent commit is from the branch side
-        Run<?, ?> featBuild = buildSuccessfully(job);
-        GitCommitsRecord featRecord = featBuild.getAction(GitCommitsRecord.class);
-        ReferenceBuild featRefBuild = featBuild.getAction(ReferenceBuild.class);
-        assertThat(featRecord).isNotNull()
-                .hasParentCommit(sideRecord.getLatestCommit());
-        assertThat(featRefBuild).isNotNull()
-                .hasOwner(featBuild)
-                .hasReferenceBuildId(sideBuild.getExternalizableId());
+        // Reference build is build1 from master branch
+        Run<?, ?> build3 = buildSuccessfully(job);
+        assertThat(build3.getAction(GitCommitsRecord.class)).isNotNull();
+        assertThat(build3.getAction(ReferenceBuild.class)).isNotNull()
+                .hasOwner(build3)
+                .hasReferenceBuildId(build1.getExternalizableId());
     }
 
     @Test
     public void testMultiBranch2() throws IOException {
-        /*  - commit #1 master
-            - checkout new branch side
+        /*  - commit A master
+            - checkout new branch feature
             - checkout master
-            - commit #2 master
-            - build master (#1, contains commits #1 and #2)
-            - checkout side
-            - commit #1 side
-            - build side (#2)
-            --> Then the parent build is not the latest commit of #1 */
+            - commit B master
+            - build master (#1, contains commits A and B)
+            - checkout feature
+            - commit C feature
+            - build feature #2  */
 
-        // Init commit
-        String currentCommit = getHead();
+        // Commit A
+        String commitA = getHead();
         FreeStyleProject job = createFreeStyleProject("MultiBranchTwo");
 
-        checkoutNewBranch("side");
+        checkoutNewBranch("feature");
+
         checkout("master");
-        writeFileAsAuthorBar("Second commit to master");
-        Run<?, ?> firstMasterBuild = buildSuccessfully(job);
-        GitCommitsRecord firstMasterRecord = firstMasterBuild.getAction(GitCommitsRecord.class);
-        ReferenceBuild firstMasterRefBuild = firstMasterBuild.getAction(ReferenceBuild.class);
-        // master has 2 commits, but only one build -> parent commit, but no reference build
-        assertThat(firstMasterRecord).isNotNull()
-                .hasParentCommit(currentCommit);
-        assertThat(firstMasterRefBuild).isNotNull()
-                .hasOwner(firstMasterBuild)
+        // Commit B
+        writeFileAsAuthorBar("Commit B in master branch");
+
+        Run<?, ?> build1 = buildSuccessfully(job);
+        // master has commits [A, B] , but only one build -> no reference build
+        assertThat(build1.getAction(GitCommitsRecord.class)).isNotNull();
+        assertThat(build1.getAction(ReferenceBuild.class)).isNotNull()
+                .hasOwner(build1)
                 .doesNotHaveReferenceBuild();
 
-        checkout("side");
-        writeFileAsAuthorBar("Second commit to side");
-        Run<?, ?> firstSideBuild = buildSuccessfully(job);
-        GitCommitsRecord firstSideRecord = firstSideBuild.getAction(GitCommitsRecord.class);
-        ReferenceBuild firstSideRefBuild = firstSideBuild.getAction(ReferenceBuild.class);
-        assertThat(firstSideRecord).isNotNull()
-                .hasParentCommit(currentCommit);
-        assertThat(firstSideRefBuild).isNotNull()
-                .hasOwner(firstSideBuild)
-                .hasReferenceBuildId(firstMasterBuild.getExternalizableId());
-        // First build contains the parent commit, so the first build has to be selected as reference build
+        checkout("feature");
+        // Commit C
+        writeFileAsAuthorBar("Commit B in feature branch");
+        Run<?, ?> build2 = buildSuccessfully(job);
+        // build #1 contains the parent commit -> the build #1 is reference build
+        assertThat(build2.getAction(GitCommitsRecord.class)).isNotNull();
+        assertThat(build2.getAction(ReferenceBuild.class)).isNotNull()
+                .hasOwner(build2)
+                .hasReferenceBuildId(build1.getExternalizableId());
     }
 
     private FreeStyleProject createFreeStyleProject(final String jobName) throws IOException {

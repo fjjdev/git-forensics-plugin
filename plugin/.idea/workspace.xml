@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:dependabot" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:dependabot" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:maven" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="551e010c-dbc9-49eb-9bcd-84f085efb611" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/jenkins/plugins/forensics/git/reference/GitCheckoutListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/jenkins/plugins/forensics/git/reference/GitCheckoutListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/jenkins/plugins/forensics/git/reference/GitCommitsRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/jenkins/plugins/forensics/git/reference/GitCommitsRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/jenkins/plugins/forensics/git/reference/GitReferenceRecorder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/jenkins/plugins/forensics/git/reference/GitReferenceRecorder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/io/jenkins/plugins/forensics/git/reference/GitParentCommitITest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/io/jenkins/plugins/forensics/git/reference/GitParentCommitITest.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2020.2.2\plugins\maven\lib\maven3" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="1hpC0dPIINwoFeyM4hUiXBnvFXk" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="reference.settings.project.maven.ignored.files" />
+  </component>
+  <component name="RunManager" selected="JUnit.GitParentCommitITest">
+    <configuration name="Testing" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="io.jenkins.plugins.forensics.git.reference.Testing" />
+      <module name="git-forensics" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="io.jenkins.plugins.forensics.git.reference.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GitParentCommitITest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <useClassPathOnly />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="io.jenkins.plugins.forensics.git.reference.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
+      <option name="PACKAGE_NAME" value="io.jenkins.plugins.forensics.git.reference" />
+      <option name="MAIN_CLASS_NAME" value="io.jenkins.plugins.forensics.git.reference.GitParentCommitITest" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="PARAMETERS" value="" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GitParentCommitITest.testMultiBranch" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="git-forensics" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="io.jenkins.plugins.forensics.git.reference.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="io.jenkins.plugins.forensics.git.reference" />
+      <option name="MAIN_CLASS_NAME" value="io.jenkins.plugins.forensics.git.reference.GitParentCommitITest" />
+      <option name="METHOD_NAME" value="testMultiBranch" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GitParentCommitITest.testMultiBranch2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="git-forensics" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="io.jenkins.plugins.forensics.git.reference.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="io.jenkins.plugins.forensics.git.reference" />
+      <option name="MAIN_CLASS_NAME" value="io.jenkins.plugins.forensics.git.reference.GitParentCommitITest" />
+      <option name="METHOD_NAME" value="testMultiBranch2" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GitParentCommitITest.testSingleBranch" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="git-forensics" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="io.jenkins.plugins.forensics.git.reference.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="io.jenkins.plugins.forensics.git.reference" />
+      <option name="MAIN_CLASS_NAME" value="io.jenkins.plugins.forensics.git.reference.GitParentCommitITest" />
+      <option name="METHOD_NAME" value="testSingleBranch" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.GitParentCommitITest" />
+        <item itemvalue="JUnit.GitParentCommitITest.testMultiBranch2" />
+        <item itemvalue="JUnit.GitParentCommitITest.testSingleBranch" />
+        <item itemvalue="JUnit.GitParentCommitITest.testMultiBranch" />
+        <item itemvalue="Application.Testing" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="551e010c-dbc9-49eb-9bcd-84f085efb611" name="Default Changelist" comment="" />
+      <created>1600698427072</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1600698427072</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="433" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1604065362144">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="433" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1604065362144" />
+    <state width="1877" height="452" key="GridCell.Tab.0.bottom" timestamp="1603438917942">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="452" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1603438917942" />
+    <state width="1877" height="452" key="GridCell.Tab.0.center" timestamp="1603438917941">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="452" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1603438917941" />
+    <state width="1877" height="452" key="GridCell.Tab.0.left" timestamp="1603438917941">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="452" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1603438917941" />
+    <state width="1877" height="452" key="GridCell.Tab.0.right" timestamp="1603438917942">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="452" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1603438917942" />
+    <state width="1877" height="487" key="GridCell.Tab.1.bottom" timestamp="1602860012331">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="487" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1602860012331" />
+    <state width="1877" height="487" key="GridCell.Tab.1.center" timestamp="1602860012331">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="487" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1602860012331" />
+    <state width="1877" height="487" key="GridCell.Tab.1.left" timestamp="1602860012330">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="487" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1602860012330" />
+    <state width="1877" height="487" key="GridCell.Tab.1.right" timestamp="1602860012331">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="487" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1602860012331" />
+    <state x="490" y="174" key="Maven.ArtifactSearchDialog" timestamp="1603438367682">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="490" y="174" key="Maven.ArtifactSearchDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1603438367682" />
+    <state x="436" y="110" key="SettingsEditor" timestamp="1603438430097">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="436" y="110" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1603438430097" />
+    <state x="616" y="240" key="run.anything.popup" timestamp="1602508653056">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="616" y="240" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1602508653056" />
+  </component>
+</project>

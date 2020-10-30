@@ -121,21 +121,13 @@ public class GitReferenceRecorder extends ReferenceRecorder {
      * @return reference build, if exists
      */
     private Optional<Run<?, ?>> findParentReferenceBuildFromCommit(final GitCommitsRecord thisCommit) {
-        List<RevCommit> commits = thisCommit.getRevCommits();
+        List<String> parentCommits = thisCommit.getParentCommits();
+        String parentCommit = parentCommits.isEmpty() ? "" : parentCommits.get(0);
 
-        if(commits.isEmpty()) {
-            return findParentReferenceBuild(thisCommit.getOwner(), thisCommit.getParentCommit());
-        } else {
-            return commits.stream().map(commit -> {
-                return Arrays.stream(commit.getParents())
-                        .map(parent -> findParentReferenceBuild(thisCommit.getOwner(), parent.getName()))
-                        .filter(Optional::isPresent)
-                        .findFirst()
-                        .orElseGet(Optional::empty);
-            }).filter(Optional::isPresent)
-                    .findFirst()
-                    .orElseGet(Optional::empty);
+        while (thisCommit.getCommits().contains(parentCommit)) {
+            parentCommit = parentCommits.get(thisCommit.getCommits().indexOf(parentCommit));
         }
+        return findParentReferenceBuild(thisCommit.getOwner(), parentCommit);
     }
 
     @Override

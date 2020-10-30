@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.jenkins-ci.plugins:git:test-jar:tests:4.2.2">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/jenkins-ci/plugins/git/4.2.2/git-4.2.2-tests.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/jenkins-ci/plugins/git/4.2.2/git-4.2.2-test-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/jenkins-ci/plugins/git/4.2.2/git-4.2.2-test-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

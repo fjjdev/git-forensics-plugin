@@ -97,13 +97,24 @@ public class GitCheckoutListener extends SCMListener {
     private GitCommitsRecord recordNewCommits(final Run<?, ?> build, final GitClient gitClient,
             final String scmKey, final FilteredLog logger, final String latestCommit) {
         List<RevCommit> revCommits = recordCommitsSincePreviousBuild(latestCommit, gitClient, scmKey, logger);
-        List<String> commits = revCommits.stream().map(RevCommit::getName).collect(Collectors.toList());
+        List<String> parentCommits = new ArrayList<>();
+        if(revCommits.isEmpty()) {
+            parentCommits.add(findParentCommit(gitClient));
+        } else {
+            for(RevCommit revCommit : revCommits) {
+                String parentCommit = null;
+                if(revCommit.getParentCount() > 0) {
+                    parentCommit = revCommit.getParent(0).getName();
+                }
+                parentCommits.add(parentCommit);
+            }
 
-        final String parentCommit = findParentCommit(gitClient);
+        }
+        List<String> commits = revCommits.stream().map(RevCommit::getName).collect(Collectors.toList());
         
         if (commits.isEmpty()) {
             logger.logInfo("-> No new commits found");
-            return new GitCommitsRecord(build, scmKey, logger, latestCommit, parentCommit);
+            return new GitCommitsRecord(build, scmKey, logger, latestCommit, commits);
         }
         else {
             if (commits.size() == 1) {
@@ -112,8 +123,8 @@ public class GitCheckoutListener extends SCMListener {
             else {
                 logger.logInfo("-> Recorded %d new commits", commits.size());
             }
-            return new GitCommitsRecord(build, scmKey, logger, commits.get(0), parentCommit, 
-                    commits, revCommits, getRecordingType(latestCommit));
+            return new GitCommitsRecord(build, scmKey, logger, commits.get(0), commits, parentCommits,
+                    getRecordingType(latestCommit));
         }
     }
 
@@ -154,7 +165,9 @@ public class GitCheckoutListener extends SCMListener {
                 }
                 return StringUtils.EMPTY;
             });
-        } catch(IOException | InterruptedException e) {}
+        } catch(IOException | InterruptedException e) {
+
+        }
         return StringUtils.EMPTY;
     }
     
