@@ -107,7 +107,7 @@ public class GitCommitsRecord implements RunAction2, Serializable {
      */
     GitCommitsRecord(final Run<?, ?> owner, final String scmKey,
             final FilteredLog logger, final String latestCommit, final List<String> parentCommits) {
-        this(owner, scmKey, logger, latestCommit, parentCommits, Collections.emptyList());
+        this(owner, scmKey, logger, latestCommit, Collections.emptyList(), parentCommits);
     }
 
     public Run<?, ?> getOwner() {

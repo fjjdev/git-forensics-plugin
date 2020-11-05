@@ -29,8 +29,7 @@ public class GitParentCommitITest extends GitITest {
         // Build 1: [A]
         Run<?, ?> build1 = buildSuccessfully(job);
         // Commit A has no parent commit and therefore build1 has no reference build
-        assertThat(build1.getAction(GitCommitsRecord.class)).isNotNull()
-                .hasParentCommits(Collections.emptyList());
+        assertThat(build1.getAction(GitCommitsRecord.class)).isNotNull();
         assertThat(build1.getAction(ReferenceBuild.class)).isNotNull()
                 .hasOwner(build1)
                 .doesNotHaveReferenceBuild();

@@ -102,19 +102,18 @@ public class GitCheckoutListener extends SCMListener {
             parentCommits.add(findParentCommit(gitClient));
         } else {
             for(RevCommit revCommit : revCommits) {
-                String parentCommit = null;
+                String parentCommit = StringUtils.EMPTY;
                 if(revCommit.getParentCount() > 0) {
                     parentCommit = revCommit.getParent(0).getName();
                 }
                 parentCommits.add(parentCommit);
             }
-
         }
         List<String> commits = revCommits.stream().map(RevCommit::getName).collect(Collectors.toList());
         
         if (commits.isEmpty()) {
             logger.logInfo("-> No new commits found");
-            return new GitCommitsRecord(build, scmKey, logger, latestCommit, commits);
+            return new GitCommitsRecord(build, scmKey, logger, latestCommit, parentCommits);
         }
         else {
             if (commits.size() == 1) {

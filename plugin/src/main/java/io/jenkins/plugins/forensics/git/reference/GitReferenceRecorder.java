@@ -2,11 +2,13 @@ package io.jenkins.plugins.forensics.git.reference;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import edu.hm.hafner.util.VisibleForTesting;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
@@ -122,11 +124,16 @@ public class GitReferenceRecorder extends ReferenceRecorder {
      */
     private Optional<Run<?, ?>> findParentReferenceBuildFromCommit(final GitCommitsRecord thisCommit) {
         List<String> parentCommits = thisCommit.getParentCommits();
-        String parentCommit = parentCommits.isEmpty() ? "" : parentCommits.get(0);
+        String parentCommit = parentCommits.get(0);
 
-        while (thisCommit.getCommits().contains(parentCommit)) {
+        while (!StringUtils.isEmpty(parentCommit) && thisCommit.getCommits().contains(parentCommit)) {
             parentCommit = parentCommits.get(thisCommit.getCommits().indexOf(parentCommit));
         }
+
+        if(StringUtils.isEmpty(parentCommit)) {
+            return Optional.empty();
+        }
+
         return findParentReferenceBuild(thisCommit.getOwner(), parentCommit);
     }
 
